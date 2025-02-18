@@ -1,0 +1,14 @@
+h1 {
+    color: rgb(23, 113, 186); 
+    text-align:center;
+}
+
+.login_inputs { /* 클래스 방식 */
+    font-size: 25px;
+}
+
+#btn_login { /* id 방식 */
+    font-size: 25px; 
+    width: 100px; 
+    height: 40px;
+}
