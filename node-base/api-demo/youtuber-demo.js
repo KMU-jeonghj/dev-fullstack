@@ -36,7 +36,7 @@ db.set(idCounter++, user2);
 
 
 //api
-app.get('/user/:id', function (req, res) {
+app.get('/users/:id', function (req, res) {
     let {id} = req.params;
     id = parseInt(id)
 
@@ -51,17 +51,26 @@ app.get('/user/:id', function (req, res) {
 })
 
 app.get('/users', function (req, res) {
-    let users = {}
-    db.forEach(function (v, k) {
-        users[k] = v
-    });
-    res.json(users)
+    if (db.size == 0) {
+       
+        res.json({
+            message : "db is empty"
+        })
+        
+    } else {
+        let users = {}
+        db.forEach(function (v, k) {
+            users[k] = v
+            });
+        res.json(users)
+    }
+    
 })
 
 
 
 app.use(express.json()) // http 외 모듈(미들웨어) 설정
-app.post('/user', function (req, res) {
+app.post('/users', function (req, res) {
     
     console.log(req.body)
     //res.json(req.body)
@@ -73,4 +82,48 @@ app.post('/user', function (req, res) {
         message : `${db.get(idCounter-1).title}  , hello!`
     })
 })
-//db 개수 알기
+
+
+
+
+app.delete('/users/:id', function(req, res) {
+    let {id} = req.params
+    id = parseInt(id)
+
+    let user = db.get(id)
+    if (user == undefined) {
+        res.json({
+            message : "not found"
+        })
+    } else {
+        db.delete(id)
+        res.json({
+            message : `${user.title}, bye~`
+        })
+    }
+
+})
+
+
+app.delete('/users', function (req, res) {
+
+    let msg = ""
+    if (db.size == 0) {
+       
+        msg = "no data"
+        
+    }
+    else {
+        db.clear()
+        
+        msg = "db is cleared"
+        
+    }
+
+    res.json({
+        message : msg
+    })
+})
+
+
+
