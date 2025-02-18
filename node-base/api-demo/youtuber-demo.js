@@ -51,9 +51,11 @@ app.get('/user/:id', function (req, res) {
 })
 
 app.get('/users', function (req, res) {
-    res.json({
-        
-    })
+    let users = {}
+    db.forEach(function (v, k) {
+        users[k] = v
+    });
+    res.json(users)
 })
 
 
