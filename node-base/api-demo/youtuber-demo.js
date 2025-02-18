@@ -127,3 +127,29 @@ app.delete('/users', function (req, res) {
 
 
 
+
+
+app.put('/users/:id', function (req, res) {
+    let {id} = req.params
+    id = parseInt(id)
+
+    let user = db.get(id)
+    let preTitle = user.title
+    if (user == undefined) {
+        res.json({
+            message : `cannot find user${id}`
+        })
+    } else {
+        let title = req.body.title
+        let sub = req.body.sub
+        let videoNum = req.body.videoNum
+        user.title = title
+        user.sub = sub
+        user.videoNum = videoNum
+        
+        db.set(id, user)
+        res.json({
+            message : `${preTitle} -> ${title}`
+        })
+    }
+})
