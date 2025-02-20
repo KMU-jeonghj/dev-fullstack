@@ -42,7 +42,7 @@ app.get('/users/:id', function (req, res) {
 
     const user = db.get(id)
     if(user == undefined) {
-        res.json({
+        res.status(404).json({
             message : "no data"
         })
     } else {
@@ -51,10 +51,10 @@ app.get('/users/:id', function (req, res) {
 })
 
 app.get('/users', function (req, res) {
-    if (db.size == 0) {
+    if (db.size === 0) {
        
-        res.json({
-            message : "db is empty"
+        res.status(404).json({
+            message : "not found"
         })
         
     } else {
@@ -72,15 +72,21 @@ app.get('/users', function (req, res) {
 app.use(express.json()) // http 외 모듈(미들웨어) 설정
 app.post('/users', function (req, res) {
     
-    console.log(req.body)
-    //res.json(req.body)
+    if(req.body.title) {
+        let body = req.body
+        db.set(idCounter++, body)
 
-    let body = req.body
-    db.set(idCounter++, body)
-
-    res.json({
+        res.json({
         message : `${db.get(idCounter-1).title}  , hello!`
     })
+    }
+    else {
+        res.status(400).json({
+            message: "CANNOT FIND REQUEST BODY VALUE"
+        })
+    }
+
+    
 })
 
 
@@ -110,7 +116,9 @@ app.delete('/users', function (req, res) {
     let msg = ""
     if (db.size == 0) {
        
-        msg = "no data"
+        res.status(404).json({
+            message : "not found"
+        })
         
     }
     else {
