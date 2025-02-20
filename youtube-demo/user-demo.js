@@ -11,8 +11,55 @@ app.use(express.json())
 
 //로그인
 app.post('/login', function(req, res) {
+    
+    //request 의 id 가 db에 있는지 확인
+    const {userId, password} = req.body
+
+    let loginUser = {}
+
+    let idFlag = false
+    let pwdFlag = false
+
+    db.forEach(function(user, id) {
+        if (user.userId === userId) {
+            idFlag = true
+            loginUser = user
+
+        } 
+    })
+
+    if (isEmpty(loginUser)) {
+        //db  에서 못찾음
+        res.json({
+            message : "id를 찾지 못했습니다."
+        })
+        
+    } else {
+        if (loginUser.password === password) {
+            res.json({
+                message : "login completed!"
+            })
+        } else {
+            res.json({
+                message : "비밀번호가 틀렸습니다."
+            })
+        }    
+        
+    }
 
 })
+
+
+function isEmpty(obj) {
+    if (Object.keys(obj).length === 0) {
+        return true
+    } else {
+        return false
+    }
+}
+
+
+
 
 //회원가입
 app.post('/join', function (req, res) {
