@@ -1,6 +1,6 @@
 
 const express = require('express')
-
+const conn = require('../db')
 const router = express.Router()
 
 let db = new Map()
@@ -11,44 +11,45 @@ router
     .get((req, res) => {
         let {userId} = req.body
         let channels = []
-        
-        
-        if (db.size && userId) {
-            
-            db.forEach(function (value, key) {
-                if (value.userId === userId) {
-                    channels.push(value)
+
+        sql = "SELECT * FROM channels WHERE user_id = ?"
+
+        if (userId) {
+            conn.query(sql, userId,
+                function(err, results) {
+                    if (results.length) {
+                        res.status(200).json(results)
+                    }
+                    else {
+                        res.status(404).json({
+                            message : "NOT FOUND"
+                            })
+                    }
+                    
                 }
-            })
-
-            if (channels.length === 0) {
-                res.status(404).json({
-                    message : "no channel"
-                })
-            } else {
-                res.status(200).json(channels)
-            } 
-
-        } else {
-            res.status(404).json({
-                message : "db is empty"
-            })
+            )
         }
-
+        else {
+            //id 없으면 400 응답
+            res.status(400).end()
+        }
         
-
-
+        
     }) //전체 조회
 
     .post((req, res) => {
-        if (req.body.channelTitle) {
+        const {name, userId} = req.body
 
-            const {channelTitle} = req.body
-            db.set(idCounter++, req.body)
+        if (name && userId) {
 
-            res.status(201).json({
-            message : `${channelTitle} 채널이 생성되었습니다.`
-        })
+            let sql = "INSERT INTO channels (name, user_id) VALUES (?, ?)"
+            let values = [name, userId]
+            conn.query(sql, values,
+                function(err, results) {
+                    res.status(201).json(results)
+                }
+            )
+            
         } else {
             res.status(400).json({
                 message :" 요청 값을 제대로 보내세용"
@@ -64,13 +65,17 @@ router
         let {id} = req.params
         id = parseInt(id)
 
-        if (db.get(id) == undefined) {
-            res.status(404).json({
-                message : "NOT FOUND"
-            })
-        } else {
-            res.status(200).json(db.get(id))
-        }
+        let sql = "SELECT * FROM channels WHERE id = ?"
+        conn.query(sql,id,
+            function(err, results) {
+                if (results.length)
+                    res.status(200).json(results)
+                else
+                    res.status(404).json({
+                    message : "NOT FOUND"
+                    })
+            }
+         )   
     }) // 개별 조회
 
     .put((req, res) => {
