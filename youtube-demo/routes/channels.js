@@ -46,9 +46,7 @@ router
                     res.status(200).json(results)
                 }
                 else {
-                    res.status(404).json({
-                        message : "NOT FOUND"
-                        })
+                    return res.status(400).end()
                 }
                 
             }

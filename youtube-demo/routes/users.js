@@ -4,6 +4,13 @@ const router = express.Router()
 const conn = require('../db')
 const {body, param, validationResult} = require('express-validator') 
 
+//jwt
+const jwt = require('jsonwebtoken')
+//env
+const dotenv = require('dotenv')
+dotenv.config()
+
+
 router.use(express.json())
 
 
@@ -46,17 +53,33 @@ router.post(
                 //email db에 있는지 확인 , 유효성
                 if (loginUser && loginUser.password === password) {
                     
+                    //요기서 토큰 발급!
+                    const token = jwt.sign({
+                        email : loginUser.email,
+                        name : loginUser.name
+                    }, process.env.PRIVATE_KEY, {
+                        expiresIn : '30m',
+                        issuer : "me"
+                    })
+
+                    //cookie 보내기
+                    res.cookie("token", token, {
+                        httpOnly : true
+                    })
+
+                    
+                    
                     res.status(200).json({
                         message : `${loginUser.name} 로그인 완료`
                     })
                     
                 } else if (loginUser && loginUser.password !== password) {
-                    res.status(400).json({
+                    res.status(403).json({
                         message : "password is not correct"
                     })
                 } else {
-                    res.status(404).json({
-                        message : "no user"
+                    res.status(403).json({
+                        message : "no email"
                     })
                 }
             }
@@ -75,11 +98,6 @@ router.post(
         validate
     ], 
     function (req, res, next) {
-        if (err) {
-            console.log(err)
-            return res.status(400).end()
-        }
-
 
         
         const {email, name, password, contact} = req.body
