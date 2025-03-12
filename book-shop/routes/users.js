@@ -8,20 +8,23 @@ const {StatusCodes} = require('http-status-codes');
 
 router.use(express.json());
 
-const {join} = require('../controller/UserController');
+const {join,
+      login,
+      requestPasswordReset, 
+      resetPassword} = require('../controller/UserController');
 
 
 //회원가입
 router.post('/join', join);
 
 //로그인
-router.post('/login');
+router.post('/login', login);
 
 // 비밀번호 초기화 요청
-router.post('/reset');
+router.post('/reset', requestPasswordReset);
 
 //비밀번화 초기화
-router.put('/reset');
+router.put('/reset', resetPassword);
 
 
 module.exports = router
