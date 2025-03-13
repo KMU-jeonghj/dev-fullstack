@@ -6,3 +6,6 @@ node_modules/
 
 # .env 파일 무시
 .env
+
+#sql
+.sql
