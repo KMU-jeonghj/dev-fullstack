@@ -20,7 +20,7 @@ const getAllBooks = (req, res) => {
     offset = parseInt(offset);
     
 
-    let sql = "SELECT * FROM books";
+    let sql = "SELECT *, (SELECT count(*) FROM likes WHERE likes.liked_book_id = books.id) AS likes FROM books";
     let values= [];
 
     if (category_id && newBooks) {
@@ -39,7 +39,7 @@ const getAllBooks = (req, res) => {
     
     }
 
-    sql += " LIMIT ? OFFSET ?";
+    sql += " LIMIT ? OFFSET ?;";
     values.push(limit, offset);
 
     conn.query(sql, values,
@@ -61,14 +61,24 @@ const getAllBooks = (req, res) => {
 //개별 도서 조회
 const getBook = (req, res) => {
 
-    let {id} = req.params;
+    let {user_id} = req.body;
+    let book_id = req.params.id;
     //id = parseInt(id);
 
 
     //books.id , category.id 중복 문제 AS 별명 지어주기!
-    let sql = `SELECT * FROM books LEFT JOIN category 
-        ON books.category_id = category.id WHERE books.id=?;`;
-    conn.query(sql, id,
+    let sql = `SELECT books.*,
+                (SELECT count(*) FROM likes WHERE liked_book_id = books.id) AS likes, 
+                (SELECT EXISTS (SELECT * FROM likes WHERE user_id=? AND liked_book_id=?)) AS liked,
+                category.category_name
+                FROM books 
+                LEFT JOIN category 
+                ON books.category_id = category.id
+                WHERE books.id=?;`;
+
+    let values = [user_id, book_id, book_id];
+
+    conn.query(sql, values,
         (err, results) => {
             if (err) {
                 console.log(err);

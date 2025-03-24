@@ -29,6 +29,24 @@ const addLike = (req, res) => {
 
 const removeLike = (req, res) => {
 
+    let {id} = req.params;
+    id = parseInt(id);
+    const {user_id} = req.body;
+
+    let sql = "DELETE FROM likes WHERE user_id = ? AND liked_book_id = ?;";
+    let vaules = [user_id, id];
+
+    conn.query(sql, vaules, 
+        (err, results) => {
+            if (err) {
+                console.log(err);
+                return res.status(StatusCodes.BAD_REQUEST).end();
+            }
+
+            return res.status(StatusCodes.OK).json(results);
+        }
+    )
+
 };
 
 
