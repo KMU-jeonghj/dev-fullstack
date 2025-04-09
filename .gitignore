@@ -12,3 +12,6 @@ db.js
 
 #sql
 *.sql
+
+#tsconfig
+tsconfig.json
