@@ -6,6 +6,7 @@ import FunctionCom from './FunctionCom';
 import TodoList from './Todolist';
 import MapTest from './MapTest';
 import Clock from './timer';
+import MyWeather from './MyWeather';
 
 
 
@@ -19,6 +20,7 @@ function App() {
     <div className="container">
       <TodoList></TodoList>
       <Clock></Clock>
+      <MyWeather weather='sunny'>forecast</MyWeather>
     </div>
   );
 }
