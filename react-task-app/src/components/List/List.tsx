@@ -9,6 +9,7 @@ import { addLog } from '../../store/slices/loggerSlice'
 import { v4 } from 'uuid'
 import { setModalData } from '../../store/slices/modalSlice'
 import { deleteButton, header, listWrapper, name } from './List.css'
+import { Droppable } from '@hello-pangea/dnd'
 
 type TListProps = {
   boardId: string;
@@ -46,7 +47,11 @@ const List: FC<TListProps> = ({
 
 
   return (
+    <Droppable droppableId={list.listId}>
+      {provided => (    
     <div 
+        {...provided.droppableProps}
+        ref={provided.innerRef}
       className={listWrapper}
     >
       <div className={header}>
@@ -70,12 +75,14 @@ const List: FC<TListProps> = ({
             />
           </div>
         ))}
-
+        {provided.placeholder}
         <ActionButton 
         boardId={boardId}
         listId={list.listId}
         />
     </div>
+    )}
+    </Droppable>
   )
 }
 
