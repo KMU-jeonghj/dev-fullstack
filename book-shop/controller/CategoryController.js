@@ -12,8 +12,9 @@ const getAllCategory = (req, res) => {
     conn.query(sql, (err, results) => {
         if (err) {
             console.log(err);
-            return res.status(StatusCodes.OK).json(results);
+            return res.status(StatusCodes.BAD_REQUEST).end();
         }
+        return res.status(StatusCodes.OK).json(results);
     })
 
 };

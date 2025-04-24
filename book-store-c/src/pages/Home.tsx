@@ -7,12 +7,10 @@ import Title from "../components/common/Title"
 function Home() {
     return (
     <>
-    <Title size="large" color="background">title</Title>
-    <Button size="large" scheme="primary">button test</Button>
-    <InputText placeholder="input here." />
-    <div>
-        home body
-    </div>
+    {/* <Title size="large" color="background">title</Title> */}
+    {/* <Button size="large" scheme="primary">button test</Button> */}
+    {/* <InputText placeholder="input here." /> */}
+    
     
     </>
         
