@@ -69,7 +69,7 @@ const login = (req, res) => {
                 });
                 console.log(token);
 
-                return res.status(StatusCodes.OK).json(results);
+                return res.status(StatusCodes.OK).json({...results[0], token: token});
             }
             else {
                 return res.status(StatusCodes.UNAUTHORIZED).end();  // 401 : unauthorized, 비인증

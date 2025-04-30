@@ -6,33 +6,14 @@ import { Link } from 'react-router-dom';
 import { Category } from '../../models/category.model';
 import { fetchCategory } from '../../api/category.api';
 import { useCategory } from '../../hooks/useCategory';
+import { useAuthStore } from '../../store/authStore';
 
-// const LoginIcon = FaSignInAlt;
-// const RegisterIcon = FaRegUser;
 
-// const CATEGORY = [
-//   {
-//     id: null,
-//     name: '전체',
-//   },
-//   {
-//     id: 0,
-//     name: '동화',
-//   },
-//   {
-//     id: 1,
-//     name: '소설',
-//   },
-//   {
-//     id: 2,
-//     name: '사회',
-//   },
-
-// ];
 
 
 const Header = () => {
   const {category} = useCategory();
+  const {isLoggedIn, storeLogout} = useAuthStore();
 
   return (
     <HeaderStyle>
@@ -46,7 +27,7 @@ const Header = () => {
           {
             category.map((item) => (
               <li key={item.id}>
-                <Link to={item.id === null ? "/book" : `/book?category_id=${item.id}`}>
+                <Link to={item.id === null ? "/books" : `/book?category_id=${item.id}`}>
                 {item.name}
                 </Link>
 
@@ -56,18 +37,38 @@ const Header = () => {
         </ul>
         </nav>
         <nav className='auth'>
-          <ul>
-            <li>
-              <a href="/login">
-              {FaSignInAlt({})}로그인
-              </a>
-            </li>
-            <li>
-              <a href="/register">
-              {FaRegUser({})}회원가입
-              </a>
-            </li>
-          </ul>
+          {
+            isLoggedIn && (
+              <ul>
+                <li>
+                  <Link to="/cart">장바구니</Link>
+                </li>
+                <li>
+                  <Link to="/orderlist">주문내역</Link>
+                </li>
+                <li>
+                  <button onClick={storeLogout}>로그아웃</button>
+                </li>
+              </ul>
+            )
+          }
+          {
+            !isLoggedIn && (
+              <ul>
+                <li>
+                  <a href="/login">
+                  {FaSignInAlt({})}로그인
+                  </a>
+                </li>
+                <li>
+                  <a href="/signup">
+                  {FaRegUser({})}회원가입
+                  </a>
+                </li>
+              </ul>   
+            )
+          }
+          
           </nav> 
     </HeaderStyle>
   )
@@ -110,13 +111,16 @@ const HeaderStyle = styled.header`
       display: flex;
       gap: 16px;
       li {
-        a {
+        a, button {
           font-size: 1rem;
           font-weight: 600;
           text-decoration: none;
           display: flex;
           align-items: center;
           line-height: 1;
+          background: none;
+          border: 0;
+          cursor: pointer;
 
           svg {
             margin-right: 6px;
