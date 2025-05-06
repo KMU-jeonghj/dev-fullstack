@@ -5,5 +5,11 @@ export const useAlert = () => {
         window.alert(message);
     }, []);
 
-    return showAlert;
+    const showConfirm = useCallback((message: string, onConform: () => void) => {
+        if (window.confirm(message)) {
+            onConform();
+        }
+    }, [] )
+
+    return {showAlert, showConfirm};
 }

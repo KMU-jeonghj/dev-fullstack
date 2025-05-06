@@ -22,7 +22,7 @@ export interface SignupProps {
 const Login = () => {
 
     const navigate = useNavigate();
-    const showAlert = useAlert();
+    const {showAlert} = useAlert();
 
     const { isLoggedIn, storeLogin, storeLogout } = useAuthStore();
     
@@ -39,7 +39,8 @@ const Login = () => {
         storeLogin(res.token);
 
         showAlert('로그인 되었습니다.');
-        navigate('/');
+        // navigate('/');
+        window.location.href = '/';
 
        }, (error) => {
         showAlert('로그인에 실패했습니다.');

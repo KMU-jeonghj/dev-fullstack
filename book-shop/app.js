@@ -23,3 +23,6 @@ app.use("/category", categoryRouter);
 app.use("/likes", likeRouter);
 app.use("/carts", cartRouter);
 app.use("/orders", orderRouter);
+
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());

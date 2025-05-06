@@ -11,10 +11,18 @@ extends InputHTMLAttributes<HTMLInputElement> {
 const InputText = forwardRef(({placeholder, inputType,onChange, ...props}:
      Props, ref: ForwardedRef<HTMLInputElement>) => {
     return (
-        <InputTextStyle placeholder={placeholder} ref={ref} type={inputType}
-         onChange={onChange} {...props}/>
+        <InputTextStyle 
+        placeholder={placeholder} 
+        ref={ref} 
+        type={inputType}
+        onChange={onChange} 
+        {...props}/>
     )
 }) 
+
+// const InputText = forwardRef<HTMLInputElement, Props>((props, ref) => (
+//     <InputTextStyle {...props} ref={ref} />
+//   ));
 
 const InputTextStyle = styled.input`
     padding: 0.25rem 0.75rem;

@@ -39,6 +39,13 @@ const getAllBooks = async (req, res) => {
       if (books.length === 0) {
         return res.status(StatusCodes.NOT_FOUND).end();
       }
+      else {
+        //컨벤션 변형 작업
+        books.map(function(book) {
+            book.pubDate = book.pub_date;
+            delete book.pub_date;
+        })
+      }
   
       // ✅ 두 번째 쿼리 실행
       const countResults = await query("SELECT FOUND_ROWS() as totalCount");
@@ -150,7 +157,7 @@ const getBook = (req, res) => {
     let sql = `SELECT books.*,
                 (SELECT count(*) FROM likes WHERE liked_book_id = books.id) AS likes, 
                 (SELECT EXISTS (SELECT * FROM likes WHERE user_id=? AND liked_book_id=?)) AS liked,
-                category.category_name
+                category.name AS categoryName
                 FROM books 
                 LEFT JOIN category 
                 ON books.category_id = category.id
@@ -165,8 +172,11 @@ const getBook = (req, res) => {
                 return res.status(StatusCodes.BAD_REQUEST).end();
             }
 
-            if (results[0])
+            if (results[0]){
+                results[0].pubDate = results[0].pub_date;
                 return res.status(StatusCodes.OK).json(results[0]);
+            }
+                
             else
                 return res.status(StatusCodes.NOT_FOUND).end();
         }
